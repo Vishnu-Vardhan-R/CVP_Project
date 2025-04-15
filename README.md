@@ -18,10 +18,10 @@ Visual acuity transform is implemented by applying gaussian filters with age-spe
 
 The *contrast sensitivity function(CSF)*, adapted from the truncated log-parabola model [[4]](link), is implemented in `CSFtransform.py`. The associated parameters of CSF - peak gain (**𝛄max**), peak spatial frequency (**𝑓max​**), bandwidth (**𝛽**), and truncation value (**𝛿**), is extracted from the literature [[2](*Fig. 1.A*)](link). When provided with these parameter values, the CSF curves for different ages (see below figure) are obtained, which are then applied to the Fourier domain of the input images. This modifies the contrast values for particular frequencies of the input image, ultimately mimicking the perception of an infant's vision.
 
-<p>
+<p align="center">
   <a href="https://github.com/Vishnu-Vardhan-R/CVP_Project/blob/main/imgs/Screenshot%202025-04-15%20at%2018.45.41.png">
     <img src="https://github.com/Vishnu-Vardhan-R/CVP_Project/blob/main/imgs/Screenshot%202025-04-15%20at%2018.45.41.png"
-         alt="Contrast sensitivty curves" width="236" height="54">
+         alt="Contrast sensitivty curves" width="400" height="300">
   </a>
 </p>
 
