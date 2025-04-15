@@ -1,11 +1,87 @@
-# Size Limit [![Cult Of Martians][cult-img]][cult]
+# Computational model of an infant vision
 
-<img src="https://ai.github.io/size-limit/logo.svg" align="right"
-     alt="Size Limit logo by Anton Lovchikov" width="120" height="178">
+A few minutes after an infant is born, their eyes start to open and look around. Though the vision is premature at this stage and continues to develop throughout the years, the early vision characteristics have a huge influence over shaping the adult vision. With enough literature background, the following work attempts to study, implement and evaluate the developmental aspects of an infant vision using a deep neural network model.
 
-Size Limit is a performance budget tool for JavaScript. It checks every commit
-on CI, calculates the real cost of your JS for end-users and throws an error
-if the cost exceeds the limit.
+## Charateristics of vision
+
+Here, emphasis is laid on studying the following characteristics of vision:
+
+* **Visual Acuity**: A normal developing infant is born with a very poor visual acuity(below 20/600 which is beyond the criterion for legal blindness) [[1]](link). Though this poor acuity comes across as a limitation at first, the High initial acuity hypothesis [*(Vogelsang et al., 2018)*](link) suggests that it’s a feature of the system in developmental progression of vision. Children who underwent treatment for congenital cataracts during the first year of infancy, commence their vision with high initial acuity. This high initial acuity and lack of low acuity in the development progression lead to impaired face-discrimination performance in their adolescence. Children with initially high acuity would be biased toward local processing and are impaired on tasks that rely on extended spatial processing (for example, detection of configural changes, holistic face processing) [[1]](link).
+
+* **Contrast sensitivity**: Contrast in infant vision has a progressive relation with spatial frequencies. In the study by [*(Banks and Salapatek, 1978)*](link),contrast sensitivity was measured using several test stimuli (vertical sinewave grating and unpatterned stimuli) of varying spatial frequencies and contrast levels. The results were expressed as *contrast sensitivity functions(CSF)*, showing sensitivity across different spatial frequencies. Developments in contrast sensitivity reflect maturation in visual capabilities, with potential implications for addressing early visual abnormalities [[2]](link)[[3]](link). 
+
+## Custom dataset modules
+
+A custom dataset class `CVPDataset` is utilized to transform a collection of images from the `tiny-imagenet-200` dataset. Images were subjected to visual acuity and contrast sensitivity transformations for different ages(in months) to simulate the progressive development in infants. 
+
+Visual acuity transform is implemented by applying gaussian filters with age-specific sigma(σ) values [[1]](link). 
+
+The *contrast sensitivity function(CSF)*, adapted from the truncated log-parabola model [[4]](link), is implemented in `CSFtransform.py`. The associated parameters of CSF - peak gain (**𝛄max**), peak spatial frequency (**𝑓max​**), bandwidth (**𝛽**), and truncation value (**𝛿**), is extracted from the literature [[2](*Fig. 1.A*)](link). When provided with these parameter values, the CSF curves for different ages (see below figure) are obtained, which are then applied to the Fourier domain of the input images. This modifies the contrast values for particular frequencies of the input image, ultimately mimicking the perception of an infant's vision.
+
+<p>
+  <a href="https://github.com/Vishnu-Vardhan-R/CVP_Project/blob/main/imgs/Screenshot%202025-04-15%20at%2018.45.41.png">
+    <img src="https://github.com/Vishnu-Vardhan-R/CVP_Project/blob/main/imgs/Screenshot%202025-04-15%20at%2018.45.41.png"
+         alt="Contrast sensitivty curves" width="236" height="54">
+  </a>
+</p>
+
+
+<details><summary><b>Usage instructions</b></summary>
+
+The 'CVPDataset' class is a custom PyTorch dataset designed to load and preprocess image data for training and validation. Below are the steps to use it in your project:
+
+1. **Import the `CVPDataset` Class**
+
+    ```py
+    from CVPDataset import CVPdataset
+    ```
+
+2. **Initialize the Dataset**
+
+    You can initialize the dataset for either training or validation mode by specifying the required parameters.
+
+    ```py
+    rootdir = "/path/to/dataset"  # Root directory of the dataset
+    num_classes = 10             # Number of classes to sample
+    transform = None             # Transformation to apply (e.g., torchvision transforms)
+    mode = "train"               # Mode: "train" or "val"
+    class_list = None            # Optional: List of specific classes to sample
+
+    # Create a dataset instance
+    dataset = CVPdataset(rootdir=rootdir, num_classes=num_classes, transform=transform, mode=mode, class_list=class_list)
+    ```
+
+3. **Access Dataset Length**
+    You can get the number of samples in the dataset using the `len()` function.
+
+    ```py
+    print(f"Number of samples: {len(dataset)}")
+    ```
+
+4. **Fetch a Sample**
+    You can fetch a specific sample using the dataset's `__getitem__` method or by indexing.
+
+    ```py
+    img, label = dataset[0]  # Fetch the first sample
+    ```
+
+5. **Display a Sample**
+    Use the `__sample__` method to display an image and its corresponding label.
+
+    ```py
+    dataset.__sample__(index=0)  # Display the first sample
+    ```
+
+6. **Use with a DataLoader**
+   To iterate over the dataset in batches, use `DataLoader.py`
+
+    ```py
+    dataset.__sample__(index=0)  # Display the first sample
+    ```
+
+</details>
+
+######################
 
 * **ES modules** and **tree-shaking** support.
 * Add Size Limit to **GitHub Actions**, **Circle CI** or another CI system
@@ -20,33 +96,18 @@ if the cost exceeds the limit.
 * Calculations include **all dependencies and polyfills**
   used in your JS.
 
-<p align="center">
-  <img src="./img/example.png" alt="Size Limit CLI" width="738">
-</p>
+
 
 With **[GitHub action]** Size Limit will post bundle size changes as a comment
 in pull request discussion.
 
-<p align="center">
-<img src="https://raw.githubusercontent.com/andresz1/size-limit-action/master/assets/pr.png"
-  alt="Size Limit comment in pull request about bundle size changes"
-  width="686" height="289">
-</p>
+
 
 With `--why`, Size Limit can tell you *why* your library is of this size
 and show the real cost of all your internal dependencies.
 We are using [Statoscope] for this analysis.
 
-<p align="center">
-  <img src="./img/why.png" alt="Statoscope example" width="650">
-</p>
 
-<p align="center">
-  <a href="https://evilmartians.com/?utm_source=size-limit">
-    <img src="https://evilmartians.com/badges/sponsored-by-evil-martians.svg"
-         alt="Sponsored by Evil Martians" width="236" height="54">
-  </a>
-</p>
 
 [GitHub action]: https://github.com/andresz1/size-limit-action
 [Statoscope]:    https://github.com/statoscope/statoscope
@@ -173,67 +234,6 @@ of JS than 100 kB of an image since JS compilers are very complex.
 This is why Size Limit support time-based limit. It runs headless Chrome
 to track the time a browser takes to compile and execute your JS.
 
-<details><summary><b>Show instructions</b></summary>
-
-1. Install the preset:
-
-    ```sh
-    npm install --save-dev size-limit @size-limit/preset-app
-    ```
-
-2. Add the `size-limit` section and the `size` script to your `package.json`:
-
-    ```diff
-    + "size-limit": [
-    +   {
-    +     "path": "dist/app-*.js"
-    +   }
-    + ],
-      "scripts": {
-        "build": "webpack ./webpack.config.js",
-    +   "size": "npm run build && size-limit",
-        "test": "vitest && eslint ."
-      }
-    ```
-
-3. Here’s how you can get the size for your current project:
-
-    ```sh
-    $ npm run size
-
-      Package size: 30.08 kB with all dependencies, minified and brotlied
-      Loading time: 602 ms   on slow 3G
-      Running time: 214 ms   on Snapdragon 410
-      Total time:   815 ms
-    ```
-
-4. Now, let’s set the limit. Add 25% to the current total time and use that as
-   the limit in your `package.json`:
-
-    ```diff
-      "size-limit": [
-        {
-    +     "limit": "1 s",
-          "path": "dist/app-*.js"
-        }
-      ],
-    ```
-
-5. Add the `size` script to your test suite:
-
-    ```diff
-      "scripts": {
-        "build": "webpack ./webpack.config.js",
-        "size": "npm run build && size-limit",
-    -   "test": "vitest && eslint ."
-    +   "test": "vitest && eslint . && npm run size"
-      }
-    ```
-
-6. If you don’t have a continuous integration service running, don’t forget
-   to add one — start with GitHub Actions.
-
-</details>
 
 
 ### Big Libraries
