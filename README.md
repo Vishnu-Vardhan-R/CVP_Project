@@ -49,7 +49,7 @@ Here, emphasis is laid on studying the following characteristics of vision:
 <p align="center">
 <a href="https://github.com/Vishnu-Vardhan-R/CVP_Project/blob/main/imgs/Screenshot%202025-04-15%20at%2018.46.51.png">
     <img src="https://github.com/Vishnu-Vardhan-R/CVP_Project/blob/main/imgs/Screenshot%202025-04-15%20at%2018.46.51.png"
-        alt="Image transformations" width="400" height="300">
+        alt="Image transformations" width="500" height="500">
 </a>
 </p>
 
