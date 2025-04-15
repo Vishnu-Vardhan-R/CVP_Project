@@ -28,7 +28,7 @@ Here, emphasis is laid on studying the following characteristics of vision. Imag
 </p>
 <br>
 
-<details><summary><b>Instructions for CSFtransform</b></summary>
+<details><summary><b>Instructions for CSFtransform.py</b></summary>
 <br>
 
 1. You need to specify the age in months. Input age is mapped to one of the following values - `1.0`, `3.0`, `8.0`, and `48.0` months
@@ -52,6 +52,7 @@ Here, emphasis is laid on studying the following characteristics of vision. Imag
 4. The output image is normalized to the range [0, 1]. You may need to scale it back to [0, 255] for saving or further processing.
 
 </details>
+<br>
 
 
 ## Custom dataset modules
@@ -93,7 +94,6 @@ A custom dataset class `CVPDataset` is utilized to transform a collection of ima
 </details>
 <br>
 
-<br>
 <details><summary><b>Instructions for DataLoader.py</b></summary>
 <br>
 
@@ -181,13 +181,14 @@ As stated, infant vision parameters mature progressively with age. Consequently,
 <br>
 
 
-<br>
 <details><summary><b>Instructions for train.py</b></summary>
 <br>
 
 1. Define Dataset and Training Parameters
 
     ```py
+    from train import train_model
+
     rootdir = '/path/to/dataset'
     BATCH_SIZE = 64
     NUM_CLASSES = 10
