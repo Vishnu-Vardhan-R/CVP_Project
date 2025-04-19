@@ -1,5 +1,14 @@
 # Computational model of an infant vision
 
+## Repo structure
+```
+├── Computational_model_of_infant_vision.ipynb  # Main notebook
+├── DataLoader.py                               # Custom dataloader for TinyImageNet
+├── model.py                                    # Model training engine
+├── requirements.txt                            # (Optional) Package requirements
+└── README.md                                   # You're here!
+```
+
 A few minutes after an infant is born, their eyes start to open and look around. Though the vision is premature at this stage and continues to develop throughout the years, the early vision characteristics have a huge influence over shaping the adult vision. With enough literature background, the following work attempts to study, implement and evaluate the developmental aspects of an infant vision using a deep neural network model.
 
 ## Charateristics of vision
@@ -12,19 +21,19 @@ Here, emphasis is laid on studying the following characteristics of vision. Imag
 
     <br>
     <p align="center">
-    <a href="https://github.com/Vishnu-Vardhan-R/CVP_Project/blob/main/imgs/Screenshot%202025-04-15%20at%2018.45.41.png">
-        <img src="https://github.com/Vishnu-Vardhan-R/CVP_Project/blob/main/imgs/Screenshot%202025-04-15%20at%2018.45.41.png"
+    <a href="https://github.com/Vishnu-Vardhan-R/CVP_Project/blob/main/imgs/csf%20curves.png">
+        <img src="https://github.com/Vishnu-Vardhan-R/CVP_Project/blob/main/imgs/csf%20curves.png"
             alt="Contrast sensitivty curves" width="400" height="300">
     </a>
     </p>
     <br>
 
-    This contrast sensitivity function is implemented in `CSFtransform.py`. The associated parameters of CSF - peak gain (**𝛄<sub>max</sub>**), peak spatial frequency (**𝑓<sub>max​</sub>**), bandwidth (**𝛽**), and truncation value (**𝛿**), is extracted from the literature [[2](*Fig. 1.A*)](#2). When provided with these parameter values, the CSF curves for different ages (see above figure) are obtained, which are then applied to the Fourier domain of the input images. This modifies the contrast values for particular frequencies of the input image, ultimately mimicking the perception of an infant's vision.
+    This contrast sensitivity function is implemented in `CSFtransform.py`. The associated parameters of CSF - peak gain (**𝛄<sub>max</sub>**), peak spatial frequency (**𝑓<sub>max​</sub>**), bandwidth (**𝛽**), and truncation value (**𝛿**), is extracted from [[2](*Fig. 1.A*)](#2). When provided with these parameter values, the CSF curves for different ages (see above figure) are obtained, which are then applied to the Fourier domain of the input images. This modifies the contrast values for particular frequencies of the input image, ultimately mimicking the perception of an infant's vision.
 
 <br>
 <p align="center">
-<a href="https://github.com/Vishnu-Vardhan-R/CVP_Project/blob/main/imgs/Screenshot%202025-04-15%20at%2018.46.51.png">
-    <img src="https://github.com/Vishnu-Vardhan-R/CVP_Project/blob/main/imgs/Screenshot%202025-04-15%20at%2018.46.51.png"
+<a href="https://github.com/Vishnu-Vardhan-R/CVP_Project/blob/main/imgs/transform.png">
+    <img src="https://github.com/Vishnu-Vardhan-R/CVP_Project/blob/main/imgs/transform.png"
         alt="Image transformations" width="500" height="500">
 </a>
 </p>
@@ -47,14 +56,10 @@ Here, emphasis is laid on studying the following characteristics of vision. Imag
     image = cv2.imread("path/to/image.jpg")
     
     transformed_image = csf(image)
+    cv2.imshow("Transformed Image", transformed_image)
     ```
 
-3. The input image should be in RGB format. If using OpenCV, ensure the image is converted from BGR to RGB before applying the transform.
-
-4. The output image is normalized to the range [0, 1]. You may need to scale it back to [0, 255] for saving or further processing.
-
 </details>
-<br>
 
 
 ## Custom dataset modules
@@ -72,9 +77,9 @@ A custom dataset class `CVPDataset` is utilized to transform a collection of ima
     from CVPDataset import CVPdataset
     
     rootdir = "/path/to/dataset" 
-    class_list = ['n01644900', 'n01443537', 'n01774384']
+    classlist=["class1", "class2", "class3"]    
     num_classes = 3
-    mode = "train"
+    mode = "train"                  # Options: "train", "val"
     transform = transforms.ToTensor()
 
     dataset = CVPdataset(rootdir=rootdir, num_classes=num_classes, transform=transform, mode=mode, class_list=class_list)
@@ -90,8 +95,29 @@ A custom dataset class `CVPDataset` is utilized to transform a collection of ima
 3. Use the `__sample__` method to display an image and its corresponding label.
 
     ```py
-    dataset.__sample__(index=0) 
+    dataset.__sample__(index=5) 
     ```
+
+### Notes
+The dataset expects the following directory structure:
+```
+rootdir/
+├── train/
+│   ├── class1/
+│   │   ├── images/
+│   │   │   ├── image1.jpg
+│   │   │   ├── image2.jpg
+│   │   │   └── ...
+│   ├── class2/
+│   │   └── images/
+│   └── ...
+└── val/
+    ├── images/
+    └── val_annotations.txt
+```
+* The `val_annotations.txt` file should contain tab-separated values with image names and their corresponding classes.
+* The `train_set.csv` and `val_set.csv` files are automatically generated in the `rootdir` for reference.
+* Ensure the `num_classes` does not exceed the total number of available classes in the dataset.
 
 </details>
 <br>
@@ -105,9 +131,10 @@ A custom dataset class `CVPDataset` is utilized to transform a collection of ima
     from DataLoader import dataloader
 
     num_classes = 3
-    transform = "acuity"
+    transform = "acuity"    # Options: "acuity", "cs", "none"
     age = 8.0
-    mode = "train"
+    mode = "train"          # Options: "train", "val"
+    classlist=["class1", "class2", "class3"]    # Optional
 
     train_loader = dataloader(rootdir=rootdir, num_classes=num_classes, transform=transform, age=age, mode=mode)
 
@@ -121,16 +148,16 @@ A custom dataset class `CVPDataset` is utilized to transform a collection of ima
         print(f"Batch of labels: {labels.shape}")
     ```
 
-
-3. The transform parameter determines the type of transformation applied to the dataset:
-
-    * `"acuity"`: Applies a visual acuity transformation based on the specified age.
-    * `"cs"`: Applies a contrast sensitivity transformation based on the specified age.
-    * `"none"`: No transformation is applied; the images are converted to tensors.
-
+### Notes
+* The `transform` parameter determines the type of transformation applied to the images:
+    - `"acuity"`: Applies Gaussian blur based on age to simulate visual acuity.
+    - `"cs"`: Applies the Contrast Sensitivity Function (CSF) transformation based on age.
+    - `"none"`: No transformations are applied; images are converted to tensors.
+* The dataset should follow the directory structure outlined in the `CVPDataset.py` instructions.
+* Ensure the `age` parameter is within the supported ranges: `1`, `3`, `8`, or `48` months.
+* The `dataloader` function internally uses the `CVPdataset` class from `CVPDataset.py`.
 
 </details>
-<br>
 
 
 ## Training the network
@@ -142,10 +169,10 @@ As stated, infant vision parameters mature progressively with age. Consequently,
 
 | **Model** | **Transform** | **Epochs** |
 |----------|----------------|------------|
-| M1 | No transforms | 65 |
-| M2 | Visual Acuity Curriculum | 10: Age 1mo<br>15: Age 5mo<br>40: Age 13mo |
-| M3 | Contrast Sensitivity Curriculum | 10: Age 3mo<br>15: Age 7mo<br>40: Age 13mo |
-| M4 | CS + VA Shuffle Curriculum | 5: Age 3mo (CS)<br>10: Age 3mo (VA)<br>20: Age 13mo (CS)<br>30: Age 13mo (VA) |
+| M1 | No transforms | 60 |
+| M2 | Visual Acuity Curriculum | 0-15: Age 1mo<br>16-30: Age 3mo<br>31-45: Age 5mo<br>46-60: Age 48mo |
+| M3 | Contrast Sensitivity Curriculum | 0-15: Age 1mo<br>16-30: Age 3mo<br>31-45: Age 8mo<br>46-60: Age 48mo |
+| M4 | CS + VA Shuffle Curriculum |  0-10: Age 1mo(VA)<br>11-20: Age 1mo(CS)<br>21-30: Age 3mo(VA)<br>31-40: Age 3mo(CS)<br>41-50: Age 48mo(VA)<br>51-60: Age 48mo(CS) |
 
 <br>
 <details><summary><b>Instructions for model.py</b></summary>
@@ -178,6 +205,14 @@ As stated, infant vision parameters mature progressively with age. Consequently,
 
 3. Training progress and metrics (loss and accuracy) are logged using the wandb library. Ensure you have initialized a W&B project before running the script.
 
+4. The `engine` function returns:
+* `model_eval` (dict): A dictionary containing training and validation metrics:
+    - `train_losses`
+    - `train_accuracy`
+    - `val_losses`
+    - `val_accuracy`
+* `trained_model` (torch.nn.Module): The trained PyTorch model.
+
 </details>
 <br>
 
@@ -185,14 +220,18 @@ As stated, infant vision parameters mature progressively with age. Consequently,
 <details><summary><b>Instructions for train.py</b></summary>
 <br>
 
-1. Define Dataset and Training Parameters
+The `train.py` file is the main script for training models using the CVP dataset. It supports different transformations (e.g., visual acuity and contrast sensitivity) and curriculum learning strategies.
+
+1. Define Dataset and Training Parameters. The script uses the `sample_classes` function to randomly sample classes from the dataset. This ensures that only the specified number of classes is used for training.
 
     ```py
     from train import train_model
 
-    rootdir = '/path/to/dataset'
+    ROOT_DIR = '/path/to/dataset'
+    NUM_CLASSES = 3
+    CLASS_LIST = sample_classes(NUM_CLASSES, ROOT_DIR)
+    
     BATCH_SIZE = 64
-    NUM_CLASSES = 10
     NUM_EPOCHS = 60
     ```
 
@@ -200,44 +239,51 @@ As stated, infant vision parameters mature progressively with age. Consequently,
 
     No transformation: Trains the model on the dataset without any transformations.
     ```py
-    M1 = train_model('M1_no_transform', rootdir, NUM_CLASSES, BATCH_SIZE, NUM_EPOCHS, ["none"])
+    M1 = train_model('M1_none', rootdir, NUM_CLASSES, BATCH_SIZE, NUM_EPOCHS, ["none"])
     ```
 
     Curriculum learning with contrast sensitivity transformation: Trains the model with progressively increasing contrast sensitivity based on age.
     ```py
-    M3 = train_model('M3_cs_1_3_12', rootdir, NUM_CLASSES, BATCH_SIZE, NUM_EPOCHS, ["cs"], [1.0, 3.0, 12.0])
+    M3 = train_model('M3_cs_1_3_8_48', rootdir, NUM_CLASSES, BATCH_SIZE, NUM_EPOCHS, ["cs"], [1.0, 3.0, 12.0])
     ```
 
-3. Each model is saved as a .pth file after training. For example:
+3. Each trained model is saved as a `.pth` file in the current directory. The filename includes the number of classes and the model name.
 
-    ```py
-    M1_no_transform.pth
-    M3_cs_1_3_12.pth
+    ```bash
+    3M1_none.pth
+    3M3_cs_1_3_8_48.pth
     ```
 
-4. The script uses Weights & Biases (W&B) for experiment tracking. Ensure you have login credentials for W&B before running the script.
+4. The `train_model` function internally uses the `engine` function from `model.py` and the `dataloader` function from `DataLoader.py`.
+
+5. The script uses Weights & Biases (W&B) for experiment tracking. Ensure you have login credentials for W&B before running the script. 
 
 </details>
-<br>
 
 
 ## Model evaluation
 
-The script `eval.py` loads trained models, extracts activations from selected layers for a small batch of images, computes pairwise dissimilarities based on the Pearson correlation, and visualizes the results using heatmaps. The script performs the following tasks:
-
-* **Visualize Images**: Displays a grid of images from the dataset.
-* **Compute Activations**: Extracts activations from specific layers of the model for given input images.
-* **Compute RDMs**: Calculates Representational Dissimilarity Matrices for model layers.
-* **Display Heatmaps**: Visualizes the RDMs as heatmaps for comparison.
-
+The script `eval.py` loads trained models, extracts activations from selected layers for a small batch of images, computes pairwise dissimilarities based on the Pearson correlation, and visualizes the results using heatmaps. 
 
 <br>
 <details><summary><b>Instructions for eval.py</b></summary>
 <br>
 
-1. Define the hyperparameters. Here we load the models 
+1. `show_images()` displays a grid of images with labels and saves the grid to a specified path.
 
-2. Use the `get_activation` function to extract activations from specific layers of the model for a given image
+2. For each model, load the trained weights and evaluation metrics, and load images with different transformations.
+
+    ```python
+    NUM_IMGS = 9        # total no. of images to calculate RDMs
+
+    model, eval = load_model(path)
+    imgs1 = load_images(int(NUM_IMGS/3))
+    imgs2 = load_images(int(NUM_IMGS/3), "acuity")
+    imgs3 = load_images(int(NUM_IMGS/3), "cs")
+    imgs = imgs1 + imgs2 + imgs3
+    ```
+
+3. Use the `get_activation` function to extract activations from specific layers of the model for a given image. This is achieved with the help of a `hook()` function. To access a particular layer activations, register the hook function onto the desired layer using `model.features()` and `register_forward_hook()`
 
     ```py
     from eval import load_model, get_activation
@@ -250,9 +296,37 @@ The script `eval.py` loads trained models, extracts activations from selected la
     ```
 
 </details>
+
+
+## Inferences and conclusions
+
+<br>
+<p align="center">
+<a href="https://github.com/Vishnu-Vardhan-R/CVP_Project/blob/main/imgs/train%20acc.png">
+    <img src="https://github.com/Vishnu-Vardhan-R/CVP_Project/blob/main/imgs/train%20acc.png"
+        alt="Training Accuracy" width="500" height="320">
+</a>
+
+<a href="https://github.com/Vishnu-Vardhan-R/CVP_Project/blob/main/imgs/train%20loss.png">
+    <img src="https://github.com/Vishnu-Vardhan-R/CVP_Project/blob/main/imgs/train%20loss.png"
+        alt="Training Loss" width="500" height="320">
+</a>
+</p>
 <br>
 
 
+<p align="center">
+<a href="https://github.com/Vishnu-Vardhan-R/CVP_Project/blob/main/imgs/val%20accu.png">
+    <img src="https://github.com/Vishnu-Vardhan-R/CVP_Project/blob/main/imgs/val%20accu.png"
+        alt="Validation Accuracy" width="500" height="320">
+</a>
+
+<a href="https://github.com/Vishnu-Vardhan-R/CVP_Project/blob/main/imgs/val%20loss.png">
+    <img src="https://github.com/Vishnu-Vardhan-R/CVP_Project/blob/main/imgs/val%20loss.png"
+        alt="Validation Loss" width="500" height="320">
+</a>
+</p>
+<br>
 
 ## References
 
