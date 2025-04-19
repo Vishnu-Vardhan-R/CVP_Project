@@ -3,9 +3,12 @@
 ## Repo structure
 ```
 ├── Computational_model_of_infant_vision.ipynb  # Main notebook
-├── DataLoader.py                               # Custom dataloader for TinyImageNet
+├── CVPDataset.py                               # Custom dataset module 
+├── DataLoader.py                               # Custom dataloader for TinyImageNet-200
 ├── model.py                                    # Model training engine
-├── requirements.txt                            # (Optional) Package requirements
+├── train.py                                    # Training different models 
+├── eval.py                                     # Evaluating the trained models
+├── outputs                                     # Outputs of main notebook
 └── README.md                                   # You're here!
 ```
 
@@ -62,7 +65,7 @@ Here, emphasis is laid on studying the following characteristics of vision. Imag
 </details>
 
 
-## Custom dataset modules
+## Custom dataset module
 
 A custom dataset class `CVPDataset` is utilized to transform a collection of images from the `tiny-imagenet-200` dataset. The `DataLoader.py` file provides utility functions to create a PyTorch DataLoader for the `CVPdataset` with optional transformations based on visual acuity or contrast sensitivity. These transformations simulate human visual perception at different ages.
 
@@ -120,7 +123,7 @@ rootdir/
 * Ensure the `num_classes` does not exceed the total number of available classes in the dataset.
 
 </details>
-<br>
+
 
 <details><summary><b>Instructions for DataLoader.py</b></summary>
 <br>
@@ -160,7 +163,7 @@ rootdir/
 </details>
 
 
-## Training the network
+## Training the Model
 
 This work utilises **EfficientNet-B2** [[5]](#5) as the training model due to its well-balanced tradeoff between size and accuracy. The classifier layer of the **EfficientNet-B2** has been replaced by a custom fully connected layer and includes a dropout layer with rate 0.2 to prevent overfitting. 
 
@@ -214,7 +217,6 @@ As stated, infant vision parameters mature progressively with age. Consequently,
 * `trained_model` (torch.nn.Module): The trained PyTorch model.
 
 </details>
-<br>
 
 
 <details><summary><b>Instructions for train.py</b></summary>
@@ -261,7 +263,7 @@ The `train.py` file is the main script for training models using the CVP dataset
 </details>
 
 
-## Model evaluation
+## Evaluating the model
 
 The script `eval.py` loads trained models, extracts activations from selected layers for a small batch of images, computes pairwise dissimilarities based on the Pearson correlation, and visualizes the results using heatmaps. 
 
@@ -297,6 +299,9 @@ The script `eval.py` loads trained models, extracts activations from selected la
 
 </details>
 
+## Running the Model
+
+
 
 ## Inferences and conclusions
 
@@ -312,8 +317,6 @@ The script `eval.py` loads trained models, extracts activations from selected la
         alt="Training Loss" width="500" height="320">
 </a>
 </p>
-<br>
-
 
 <p align="center">
 <a href="https://github.com/Vishnu-Vardhan-R/CVP_Project/blob/main/imgs/val%20accu.png">
