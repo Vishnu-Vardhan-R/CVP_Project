@@ -177,7 +177,8 @@ As stated, infant vision parameters mature progressively with age. Consequently,
 | M3 | Contrast Sensitivity Curriculum | 0-15: Age 1mo<br>16-30: Age 3mo<br>31-45: Age 8mo<br>46-60: Age 48mo |
 | M4 | CS + VA Shuffle Curriculum |  0-10: Age 1mo(VA)<br>11-20: Age 1mo(CS)<br>21-30: Age 3mo(VA)<br>31-40: Age 3mo(CS)<br>41-50: Age 48mo(VA)<br>51-60: Age 48mo(CS) |
 
-*Note: All methods use same model **EfficientNet-B2**, but trained under different image transforms* 
+
+###### *Note: All methods use same model **EfficientNet-B2**, but trained under different image transforms* 
 <br>
 <details><summary><b>Instructions for model.py</b></summary>
 <br>
