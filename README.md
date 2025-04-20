@@ -170,13 +170,14 @@ This work utilises **EfficientNet-B2** [[5]](#5) as the training model due to it
 As stated, infant vision parameters mature progressively with age. Consequently, a developmental curriculum(youngest to eldest) is created to train the deep network model. Training the model with data in this natural sequence not only mimics this behaviour, but could also potentially outperform random data sequences [[6]](#6).  Four training conditions were defined (see Table below). The `model.py` file contains the `engine()` function, which is used to train the model on a given dataset. The `train.py` script is the main entry point for training models using the engine function from `model.py`. It supports training regimen with curriculum learning with transformations such as visual acuity and contrast sensitivity.
 
 
-| **Model** | **Transform** | **Epochs** |
+| **Method** | **Transform** | **Epochs** |
 |----------|----------------|------------|
 | M1 | No transforms | 60 |
 | M2 | Visual Acuity Curriculum | 0-15: Age 1mo<br>16-30: Age 3mo<br>31-45: Age 5mo<br>46-60: Age 48mo |
 | M3 | Contrast Sensitivity Curriculum | 0-15: Age 1mo<br>16-30: Age 3mo<br>31-45: Age 8mo<br>46-60: Age 48mo |
 | M4 | CS + VA Shuffle Curriculum |  0-10: Age 1mo(VA)<br>11-20: Age 1mo(CS)<br>21-30: Age 3mo(VA)<br>31-40: Age 3mo(CS)<br>41-50: Age 48mo(VA)<br>51-60: Age 48mo(CS) |
 
+*Note: All methods use same model **EfficientNet-B2**, but trained under different image transforms* 
 <br>
 <details><summary><b>Instructions for model.py</b></summary>
 <br>
