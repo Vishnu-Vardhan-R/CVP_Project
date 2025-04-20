@@ -163,7 +163,7 @@ rootdir/
 </details>
 
 
-## Training the Model
+## Training
 
 This work utilises **EfficientNet-B2** [[5]](#5) as the training model due to its well-balanced tradeoff between size and accuracy. The classifier layer of the **EfficientNet-B2** has been replaced by a custom fully connected layer and includes a dropout layer with rate 0.2 to prevent overfitting. 
 
@@ -264,7 +264,7 @@ The `train.py` file is the main script for training models using the CVP dataset
 </details>
 
 
-## Evaluating the model
+## Evaluation
 
 The script `eval.py` loads trained models, extracts activations from selected layers for a small batch of images, computes pairwise dissimilarities based on the Pearson correlation, and visualizes the results using heatmaps. 
 
@@ -300,11 +300,11 @@ The script `eval.py` loads trained models, extracts activations from selected la
 
 </details>
 
-## Running the Model
+## Main notebook
 
 
 
-## Inferences and conclusions
+## Inference
 
 <br>
 <p align="center">
