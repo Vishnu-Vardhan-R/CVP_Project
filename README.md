@@ -1,15 +1,16 @@
 # Computational model of an infant vision
 
-## Repo structure
+<!-- ## Repo structure -->
 ```
-├── Computational_model_of_infant_vision.ipynb  # Main notebook
-├── CVPDataset.py                               # Custom dataset module 
-├── DataLoader.py                               # Custom dataloader for TinyImageNet-200
-├── model.py                                    # Model training engine
-├── train.py                                    # Training different models 
-├── eval.py                                     # Evaluating the trained models
-├── outputs                                     # Outputs of main notebook
-└── README.md                                   # You're here!
+├── Computational_model_infant_vision.ipynb  # Main notebook
+├── CVPDataset.py                            # Custom dataset module 
+├── DataLoader.py                            # Custom dataloader module
+├── model.py                                 # Model training engine
+├── train.py                                 # Executable file for training
+├── eval.py                                  # Executable file for evaluation
+├── outputs                                  # Outputs of main notebook
+├── imgs                                     # images for README.md
+└── README.md                                # You're here!
 ```
 
 A few minutes after an infant is born, their eyes start to open and look around. Though the vision is premature at this stage and continues to develop throughout the years, the early vision characteristics have a huge influence over shaping the adult vision. With enough literature background, the following work attempts to study, implement and evaluate the developmental aspects of an infant vision using a deep neural network model.
@@ -101,26 +102,24 @@ A custom dataset class `CVPDataset` is utilized to transform a collection of ima
     dataset.__sample__(index=5) 
     ```
 
-### Notes
-The dataset expects the following directory structure:
-```
-rootdir/
-├── train/
-│   ├── class1/
-│   │   ├── images/
-│   │   │   ├── image1.jpg
-│   │   │   ├── image2.jpg
-│   │   │   └── ...
-│   ├── class2/
-│   │   └── images/
-│   └── ...
-└── val/
-    ├── images/
-    └── val_annotations.txt
-```
-* The `val_annotations.txt` file should contain tab-separated values with image names and their corresponding classes.
-* The `train_set.csv` and `val_set.csv` files are automatically generated in the `rootdir` for reference.
-* Ensure the `num_classes` does not exceed the total number of available classes in the dataset.
+4. The dataset expects the following directory structure:
+    ```
+    rootdir/
+    ├── train/
+    │   ├── class1/
+    │   │   ├── images/
+    │   │   │   ├── image1.jpg
+    │   │   │   ├── image2.jpg
+    │   │   │   └── ...
+    │   ├── class2/
+    │   │   └── images/
+    │   └── ...
+    └── val/
+        ├── images/
+        └── val_annotations.txt
+    ```
+
+5. The `train_set.csv` and `val_set.csv` files are automatically generated in the `rootdir` for reference.
 
 </details>
 
@@ -151,14 +150,14 @@ rootdir/
         print(f"Batch of labels: {labels.shape}")
     ```
 
-### Notes
-* The `transform` parameter determines the type of transformation applied to the images:
+3. The `transform` parameter determines the type of transformation applied to the images:
     - `"acuity"`: Applies Gaussian blur based on age to simulate visual acuity.
     - `"cs"`: Applies the Contrast Sensitivity Function (CSF) transformation based on age.
     - `"none"`: No transformations are applied; images are converted to tensors.
-* The dataset should follow the directory structure outlined in the `CVPDataset.py` instructions.
-* Ensure the `age` parameter is within the supported ranges: `1`, `3`, `8`, or `48` months.
-* The `dataloader` function internally uses the `CVPdataset` class from `CVPDataset.py`.
+
+4. The dataset should follow the directory structure outlined in the `CVPDataset.py` instructions.
+
+5. The `dataloader` function internally uses the `CVPdataset` class from `CVPDataset.py`.
 
 </details>
 
@@ -177,8 +176,8 @@ As stated, infant vision parameters mature progressively with age. Consequently,
 | M3 | Contrast Sensitivity Curriculum | 0-15: Age 1mo<br>16-30: Age 3mo<br>31-45: Age 8mo<br>46-60: Age 48mo |
 | M4 | CS + VA Shuffle Curriculum |  0-10: Age 1mo(VA)<br>11-20: Age 1mo(CS)<br>21-30: Age 3mo(VA)<br>31-40: Age 3mo(CS)<br>41-50: Age 48mo(VA)<br>51-60: Age 48mo(CS) |
 
+###### **Note: All methods use same model **EfficientNet-B2**, but trained under different image transforms* 
 
-###### *Note: All methods use same model **EfficientNet-B2**, but trained under different image transforms* 
 <br>
 <details><summary><b>Instructions for model.py</b></summary>
 <br>
@@ -217,6 +216,8 @@ As stated, infant vision parameters mature progressively with age. Consequently,
     - `val_losses`
     - `val_accuracy`
 * `trained_model` (torch.nn.Module): The trained PyTorch model.
+
+5. Ensure the dependent files `CVPDatset.py`, `DataLoader.py`, `CSFTransform.py` and `model.py` are in the same directory, when running the `train.py` file.
 
 </details>
 
@@ -267,7 +268,7 @@ The `train.py` file is the main script for training models using the CVP dataset
 
 ## Evaluation
 
-The script `eval.py` loads trained models, extracts activations from selected layers for a small batch of images, computes pairwise dissimilarities based on the Pearson correlation, and visualizes the results using heatmaps. 
+The script `eval.py` loads trained models, extracts activations from selected layers for a batch of images, computes pairwise dissimilarities based on the Pearson correlation, and visualizes the results using heatmaps. 
 
 <br>
 <details><summary><b>Instructions for eval.py</b></summary>
@@ -275,15 +276,15 @@ The script `eval.py` loads trained models, extracts activations from selected la
 
 1. `show_images()` displays a grid of images with labels and saves the grid to a specified path.
 
-2. For each model, load the trained weights and evaluation metrics, and load images with different transformations.
+2. For each model, load the trained weights from the saved pth files, and load images with different transformations.
 
     ```python
     NUM_IMGS = 9        # total no. of images to calculate RDMs
+    model, eval_metrics = load_model('path/to/model.pth')
 
-    model, eval = load_model(path)
-    imgs1 = load_images(int(NUM_IMGS/3))
-    imgs2 = load_images(int(NUM_IMGS/3), "acuity")
-    imgs3 = load_images(int(NUM_IMGS/3), "cs")
+    imgs1 = load_images(int(NUM_IMGS/3))            # images with no transform
+    imgs2 = load_images(int(NUM_IMGS/3), "acuity")  # images with visual acuity transform
+    imgs3 = load_images(int(NUM_IMGS/3), "cs")      # images with contrast sensitivity transform
     imgs = imgs1 + imgs2 + imgs3
     ```
 
@@ -296,16 +297,20 @@ The script `eval.py` loads trained models, extracts activations from selected la
 
     image = images[0]  # Use the first image
     activation, predicted_class = get_activation(image, layer_idx='features1')
-    print(f"Predicted class: {predicted_class}")
     ```
+
+4. Representational dissimilarity matrices are computed for a given layer activation for the given batch of images using pearson correlation coefficient. The computed RDMs are displayed as heatmaps. The RDMs can also be used to do benchmark tests using Brainscore or any other public benchmarks.
+
+5. Ensure the dependent files `CVPDatset.py`, `DataLoader.py`, `CSFTransform.py` and `model.py` are in the same directory, when running the `eval.py` file.
 
 </details>
 
 ## Main notebook
 
+The training and evaluation can also be executed with the python notebook `Computational_model_infant_vision.ipynb`. The dependent files `CVPDatset.py`, `DataLoader.py`, `CSFTransform.py` and `model.py` are to be uplaoded in the local runtime of google colab. Also provide the `ROOT_DIR` of the dataset and `SAVE_PATH` to save all the figures and trained models.
 
 
-## Inference
+## Results
 
 <br>
 <p align="center">
@@ -352,5 +357,3 @@ Tan, M., & Le, Q.V. (2019). EfficientNet: Rethinking Model Scaling for Convoluti
 
 <a id="6">[6]</a> 
 Saber Sheybani, Himanshu Hansaria, Justin N. Wood, Linda B. Smith, and Zoran Tiganj. (2024). Curriculum learning with infant egocentric videos
-
-
