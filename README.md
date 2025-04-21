@@ -307,7 +307,7 @@ The training and evaluation can also be executed with the python notebook **`Com
 
 ## 6. Results
 
-The drawn conculsions are inline with the results from [[1]](#1) and [[6]](#6). A training strategy matters and a Developmental curriculum can help enhance the performance of a CNN based recognition system. More generally, this also illustrates the potential benefits of incorporating aspects of human developmental trajectories in designing training routines for machine-based systems.
+The drawn conculsions are inline with the results from [[1]](#1) and [[6]](#6). A training strategy matters and a Developmental curriculum can help enhance the performance of a CNN based recognition system. More generally, this also illustrates the potential benefits of incorporating aspects of human developmental trajectories in designing training routines.
 
 <br>
 <p align="center">
