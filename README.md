@@ -27,7 +27,7 @@ Here, emphasis is laid on studying the following characteristics of vision. Imag
     <p align="center">
     <a href="https://github.com/Vishnu-Vardhan-R/CVP_Project/blob/main/imgs/csf%20curves.png">
         <img src="https://github.com/Vishnu-Vardhan-R/CVP_Project/blob/main/imgs/csf%20curves.png"
-            alt="Contrast sensitivty curves" width="400" height="300">
+            alt="Contrast sensitivty curves" width="450" height="300">
     </a>
     </p>
     <br>
@@ -38,7 +38,7 @@ Here, emphasis is laid on studying the following characteristics of vision. Imag
 <p align="center">
 <a href="https://github.com/Vishnu-Vardhan-R/Computational-model-of-an-infant-vision/blob/main/imgs/transforms.png">
     <img src="https://github.com/Vishnu-Vardhan-R/Computational-model-of-an-infant-vision/blob/main/imgs/transforms.png"
-        alt="Image transformations" width="500" height="300">
+        alt="Image transformations" width="700" height="300">
 </a>
 </p>
 <br>
