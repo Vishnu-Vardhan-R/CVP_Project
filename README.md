@@ -32,7 +32,7 @@ Here, emphasis is laid on studying the following characteristics of vision. Imag
     </p>
     <br>
 
-    This contrast sensitivity function is implemented in `CSFtransform.py`. The associated parameters of CSF - peak gain (**𝛄<sub>max</sub>**), peak spatial frequency (**𝑓<sub>max​</sub>**), bandwidth (**𝛽**), and truncation value (**𝛿**), is extracted from [[2](*Fig. 1.A*)](#2). When provided with these parameter values, the CSF curves for different ages (see above figure) are obtained, which are then applied to the Fourier domain of the input images. This modifies the contrast values for particular frequencies of the input image, ultimately mimicking the perception of an infant's vision.
+    This contrast sensitivity function is implemented in **`CSFtransform.py`**. The associated parameters of CSF - peak gain (**𝛄<sub>max</sub>**), peak spatial frequency (**𝑓<sub>max​</sub>**), bandwidth (**𝛽**), and truncation value (**𝛿**), is extracted from [[2](*Fig. 1.A*)](#2). When provided with these parameter values, the CSF curves for different ages (see above figure) are obtained, which are then applied to the Fourier domain of the input images. This modifies the contrast values for particular frequencies of the input image, ultimately mimicking the perception of an infant's vision.
 
 <br>
 <p align="center">
@@ -68,7 +68,7 @@ Here, emphasis is laid on studying the following characteristics of vision. Imag
 
 ## Custom dataset module
 
-A custom dataset class `CVPDataset` is utilized to transform a collection of images from the `tiny-imagenet-200` dataset. The `DataLoader.py` file provides utility functions to create a PyTorch DataLoader for the `CVPdataset` with optional transformations based on visual acuity or contrast sensitivity. These transformations simulate human visual perception at different ages.
+A custom dataset class `CVPDataset` is utilized to transform a collection of images from the `tiny-imagenet-200` dataset. The **`DataLoader.py`** file provides utility functions to create a PyTorch DataLoader for the `CVPdataset` with optional transformations based on visual acuity or contrast sensitivity. These transformations simulate human visual perception at different ages.
 
 <br>
 <details><summary><b>Instructions for CVPdataset.py</b></summary>
@@ -80,9 +80,9 @@ A custom dataset class `CVPDataset` is utilized to transform a collection of ima
     from torchvision import transforms
     from CVPDataset import CVPdataset
     
-    rootdir = "/path/to/dataset" 
-    classlist=["class1", "class2", "class3"]    
-    num_classes = 3
+    ROOT_DIR = "/path/to/dataset" 
+    CLASS_LIST = ["class1", "class2", "class3"]    
+    NUM_CLASSES = 3
     mode = "train"                  # Options: "train", "val"
     transform = transforms.ToTensor()
 
@@ -102,7 +102,7 @@ A custom dataset class `CVPDataset` is utilized to transform a collection of ima
     dataset.__sample__(index=5) 
     ```
 
-4. The dataset expects the following directory structure:
+4. The dataset expects the following directory structure (tiny_imagenet_200):
     ```
     rootdir/
     ├── train/
@@ -119,7 +119,7 @@ A custom dataset class `CVPDataset` is utilized to transform a collection of ima
         └── val_annotations.txt
     ```
 
-5. The `train_set.csv` and `val_set.csv` files are automatically generated in the `rootdir` for reference.
+5. The **`train_set.csv`** and **`val_set.csv`** files are automatically generated in the `ROOT_DIR` for reference.
 
 </details>
 
@@ -132,14 +132,13 @@ A custom dataset class `CVPDataset` is utilized to transform a collection of ima
     ```py
     from DataLoader import dataloader
 
-    num_classes = 3
+    NUM_CLASSES = 3
+    CLASS_LIST = ["class1", "class2", "class3"]    # Optional
     transform = "acuity"    # Options: "acuity", "cs", "none"
     age = 8.0
     mode = "train"          # Options: "train", "val"
-    classlist=["class1", "class2", "class3"]    # Optional
 
     train_loader = dataloader(rootdir=rootdir, num_classes=num_classes, transform=transform, age=age, mode=mode)
-
     ```
 
 2. Iterate through the DataLoader to access batches of images and labels.
@@ -155,9 +154,7 @@ A custom dataset class `CVPDataset` is utilized to transform a collection of ima
     - `"cs"`: Applies the Contrast Sensitivity Function (CSF) transformation based on age.
     - `"none"`: No transformations are applied; images are converted to tensors.
 
-4. The dataset should follow the directory structure outlined in the `CVPDataset.py` instructions.
-
-5. The `dataloader` function internally uses the `CVPdataset` class from `CVPDataset.py`.
+4. The `dataloader` function internally uses the `CVPdataset` class from **`CVPDataset.py`**.
 
 </details>
 
@@ -166,7 +163,7 @@ A custom dataset class `CVPDataset` is utilized to transform a collection of ima
 
 This work utilises **EfficientNet-B2** [[5]](#5) as the training model due to its well-balanced tradeoff between size and accuracy. The classifier layer of the **EfficientNet-B2** has been replaced by a custom fully connected layer and includes a dropout layer with rate 0.2 to prevent overfitting. 
 
-As stated, infant vision parameters mature progressively with age. Consequently, a developmental curriculum(youngest to eldest) is created to train the deep network model. Training the model with data in this natural sequence not only mimics this behaviour, but could also potentially outperform random data sequences [[6]](#6).  Four training conditions were defined (see Table below). The `model.py` file contains the `engine()` function, which is used to train the model on a given dataset. The `train.py` script is the main entry point for training models using the engine function from `model.py`. It supports training regimen with curriculum learning with transformations such as visual acuity and contrast sensitivity.
+As stated, infant vision parameters mature progressively with age. Consequently, a developmental curriculum(youngest to eldest) is created to train the deep network model. Training the model with data in this natural sequence not only mimics this behaviour, but could also potentially outperform random data sequences [[6]](#6).  Four training conditions were defined (see Table below). The **`model.py`** file contains the `engine` function, which is used to train the model on a given dataset. The **`train.py`** script is the main entry point for training models using the engine function from **`model.py`**. It supports training regimen with curriculum learning with transformations such as visual acuity and contrast sensitivity.
 
 
 | **Method** | **Transform** | **Epochs** |
@@ -182,7 +179,7 @@ As stated, infant vision parameters mature progressively with age. Consequently,
 <details><summary><b>Instructions for model.py</b></summary>
 <br>
 
-1. Ensure you have DataLoader objects for both training and validation datasets. You can use the dataloader function from DataLoader.py to create them.
+1. Ensure you have DataLoader objects for both training and validation datasets. You can use the dataloader function from **`DataLoader.py`** to create them.
 
     ```py
     from DataLoader import dataloader
@@ -217,7 +214,7 @@ As stated, infant vision parameters mature progressively with age. Consequently,
     - `val_accuracy`
 * `trained_model` (torch.nn.Module): The trained PyTorch model.
 
-5. Ensure the dependent files `CVPDatset.py`, `DataLoader.py`, `CSFTransform.py` and `model.py` are in the same directory, when running the `train.py` file.
+5. Ensure the dependent files **`CVPDatset.py`**, **`DataLoader.py`**, **`CSFTransform.py`** and **`model.py`** are in the same directory, when running the **`train.py`** file.
 
 </details>
 
@@ -225,7 +222,7 @@ As stated, infant vision parameters mature progressively with age. Consequently,
 <details><summary><b>Instructions for train.py</b></summary>
 <br>
 
-The `train.py` file is the main script for training models using the CVP dataset. It supports different transformations (e.g., visual acuity and contrast sensitivity) and curriculum learning strategies.
+The **`train.py`** file is the main script for training models using the CVP dataset. It supports different transformations (e.g., visual acuity and contrast sensitivity) and curriculum learning strategies.
 
 1. Define Dataset and Training Parameters. The script uses the `sample_classes` function to randomly sample classes from the dataset. This ensures that only the specified number of classes is used for training.
 
@@ -259,7 +256,7 @@ The `train.py` file is the main script for training models using the CVP dataset
     3M3_cs_1_3_8_48.pth
     ```
 
-4. The `train_model` function internally uses the `engine` function from `model.py` and the `dataloader` function from `DataLoader.py`.
+4. The `train_model` function internally uses the `engine` function from **`model.py`** and the `dataloader` function from **`DataLoader.py`**.
 
 5. The script uses Weights & Biases (W&B) for experiment tracking. Ensure you have login credentials for W&B before running the script. 
 
@@ -268,15 +265,13 @@ The `train.py` file is the main script for training models using the CVP dataset
 
 ## Evaluation
 
-The script `eval.py` loads trained models, extracts activations from selected layers for a batch of images, computes pairwise dissimilarities based on the Pearson correlation, and visualizes the results using heatmaps. 
+The script **`eval.py`** loads trained models, extracts activations from selected layers for a batch of images, computes pairwise dissimilarities based on the Pearson correlation, and visualizes the results using heatmaps. 
 
 <br>
 <details><summary><b>Instructions for eval.py</b></summary>
 <br>
 
-1. `show_images()` displays a grid of images with labels and saves the grid to a specified path.
-
-2. For each model, load the trained weights from the saved pth files, and load images with different transformations.
+1. For each model, load the trained weights from the saved pth files, and load images with different transformations.
 
     ```python
     NUM_IMGS = 9        # total no. of images to calculate RDMs
@@ -288,7 +283,7 @@ The script `eval.py` loads trained models, extracts activations from selected la
     imgs = imgs1 + imgs2 + imgs3
     ```
 
-3. Use the `get_activation` function to extract activations from specific layers of the model for a given image. This is achieved with the help of a `hook()` function. To access a particular layer activations, register the hook function onto the desired layer using `model.features()` and `register_forward_hook()`
+2. Use the `get_activation` function to extract activations from specific layers of the model for a given image. This is achieved with the help of a `hook` function. To access a particular layer activations, register the hook function onto the desired layer using `model.features` and `register_forward_hook`
 
     ```py
     from eval import load_model, get_activation
@@ -299,15 +294,15 @@ The script `eval.py` loads trained models, extracts activations from selected la
     activation, predicted_class = get_activation(image, layer_idx='features1')
     ```
 
-4. Representational dissimilarity matrices are computed for a given layer activation for the given batch of images using pearson correlation coefficient. The computed RDMs are displayed as heatmaps. The RDMs can also be used to do benchmark tests using Brainscore or any other public benchmarks.
+3. Representational dissimilarity matrices are computed for a given layer activation for the given batch of images using pearson correlation coefficient. The computed RDMs are displayed as heatmaps. The RDMs can also be used to do benchmark tests using Brainscore or any other public benchmarks.
 
-5. Ensure the dependent files `CVPDatset.py`, `DataLoader.py`, `CSFTransform.py` and `model.py` are in the same directory, when running the `eval.py` file.
+4. Ensure the dependent files **`CVPDatset.py`**, **`DataLoader.py`**, **`CSFTransform.py`** and **`model.py`** are in the same directory, when running the **`eval.py`** file.
 
 </details>
 
 ## Main notebook
 
-The training and evaluation can also be executed with the python notebook `Computational_model_infant_vision.ipynb`. The dependent files `CVPDatset.py`, `DataLoader.py`, `CSFTransform.py` and `model.py` are to be uplaoded in the local runtime of google colab. Also provide the `ROOT_DIR` of the dataset and `SAVE_PATH` to save all the figures and trained models.
+The training and evaluation can also be executed with the python notebook `Computational_model_infant_vision.ipynb`. The dependent files **`CVPDatset.py`**, **`DataLoader.py`**, **`CSFTransform.py`** and **`model.py`** are to be uplaoded in the local runtime of google colab. Also provide the `ROOT_DIR` of the dataset and `SAVE_PATH` to save all the figures and trained models.
 
 
 ## Results
