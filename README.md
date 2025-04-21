@@ -324,7 +324,7 @@ The training and evaluation can also be executed with the python notebook **`Com
 
 <p align="center">
 <a href="https://github.com/Vishnu-Vardhan-R/CVP_Project/blob/main/imgs/val%20accu.png">
-    <img src="https://github.com/Vishnu-Vardhan-R/CVP_Project/blob/main/imgs/val%20accu.png"
+    <img src="https://github.com/Vishnu-Vardhan-R/CVP_Project/blob/main/imgs/val%20acc.png"
         alt="Validation Accuracy" width="500" height="320">
 </a>
 
