@@ -15,7 +15,7 @@
 
 A few minutes after an infant is born, their eyes start to open and look around. Though the vision is premature at this stage and continues to develop throughout the years, the early vision characteristics have a huge influence over shaping the adult vision. With enough literature background, the following work attempts to study, implement and evaluate the developmental aspects of an infant vision using a deep neural network model.
 
-## Charateristics of vision
+## 1. Charateristics of vision
 
 Here, emphasis is laid on studying the following characteristics of vision. Images were subjected to visual acuity and contrast sensitivity transformations for different ages(in months) to simulate the progressive development in infants. 
 
@@ -27,7 +27,7 @@ Here, emphasis is laid on studying the following characteristics of vision. Imag
     <p align="center">
     <a href="https://github.com/Vishnu-Vardhan-R/CVP_Project/blob/main/imgs/csf%20curves.png">
         <img src="https://github.com/Vishnu-Vardhan-R/CVP_Project/blob/main/imgs/csf%20curves.png"
-            alt="Contrast sensitivty curves" width="450" height="300">
+            alt="Contrast sensitivty curves" width="400" height="300">
     </a>
     </p>
     <br>
@@ -38,7 +38,7 @@ Here, emphasis is laid on studying the following characteristics of vision. Imag
 <p align="center">
 <a href="https://github.com/Vishnu-Vardhan-R/Computational-model-of-an-infant-vision/blob/main/imgs/transforms.png">
     <img src="https://github.com/Vishnu-Vardhan-R/Computational-model-of-an-infant-vision/blob/main/imgs/transforms.png"
-        alt="Image transformations" width="700" height="300">
+        alt="Image transformations" width="500" height="300">
 </a>
 </p>
 <br>
@@ -66,7 +66,7 @@ Here, emphasis is laid on studying the following characteristics of vision. Imag
 </details>
 
 
-## Custom dataset module
+## 2. Custom dataset module
 
 A custom dataset class `CVPDataset` is utilized to transform a collection of images from the `tiny-imagenet-200` dataset. The **`DataLoader.py`** file provides utility functions to create a PyTorch DataLoader for the `CVPdataset` with optional transformations based on visual acuity or contrast sensitivity. These transformations simulate human visual perception at different ages.
 
@@ -159,7 +159,7 @@ A custom dataset class `CVPDataset` is utilized to transform a collection of ima
 </details>
 
 
-## Training
+## 3. Training
 
 This work utilises **EfficientNet-B2** [[5]](#5) as the training model due to its well-balanced tradeoff between size and accuracy. The classifier layer of the **EfficientNet-B2** has been replaced by a custom fully connected layer and includes a dropout layer with rate 0.2 to prevent overfitting. 
 
@@ -173,7 +173,7 @@ As stated, infant vision parameters mature progressively with age. Consequently,
 | M3 | Contrast Sensitivity Curriculum | 0-15: Age 1mo<br>16-30: Age 3mo<br>31-45: Age 8mo<br>46-60: Age 48mo |
 | M4 | CS + VA Shuffle Curriculum |  0-10: Age 1mo(VA)<br>11-20: Age 1mo(CS)<br>21-30: Age 3mo(VA)<br>31-40: Age 3mo(CS)<br>41-50: Age 48mo(VA)<br>51-60: Age 48mo(CS) |
 
-###### **Note: All methods use same model **EfficientNet-B2**, but trained under different image transforms* 
+###### **Note: All methods use same model **EfficientNet-B2**, but trained under different training strategy* 
 
 <br>
 <details><summary><b>Instructions for model.py</b></summary>
@@ -263,7 +263,7 @@ The **`train.py`** file is the main script for training models using the CVP dat
 </details>
 
 
-## Evaluation
+## 4. Evaluation
 
 The script **`eval.py`** loads trained models, extracts activations from selected layers for a batch of images, computes pairwise dissimilarities based on the Pearson correlation, and visualizes the results using heatmaps. 
 
@@ -300,14 +300,14 @@ The script **`eval.py`** loads trained models, extracts activations from selecte
 
 </details>
 
-## Main notebook
+## 5. Main notebook
 
 The training and evaluation can also be executed with the python notebook **`Computational_model_infant_vision.ipynb`**. The dependent files **`CVPDatset.py`**, **`DataLoader.py`**, **`CSFTransform.py`** and **`model.py`** are to be uplaoded in the local runtime of google colab. Also provide the `ROOT_DIR` of the dataset and `SAVE_PATH` to save all the figures and trained models.
 
 
-## Results
+## 6. Results
 
-
+The drawn conculsions are inline with the results from [[1]] and [[6]]. A training strategy matters and a Developmental curriculum can help enhance the performance of a CNN based recognition system. More generally, this also illustrates the potential benefits of incorporating aspects of human developmental trajectories in designing training routines for machine-based systems.
 
 <br>
 <p align="center">
