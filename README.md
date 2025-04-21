@@ -9,8 +9,8 @@
 ├── train.py                                 # Executable file for training
 ├── eval.py                                  # Executable file for evaluation
 ├── outputs                                  # Outputs of main notebook
-├── imgs                                     # images for README.md
-└── README.md                                # You're here!
+├── README.md                                # You're here!
+└── imgs                                     # images for README.md
 ```
 
 A few minutes after an infant is born, their eyes start to open and look around. Though the vision is premature at this stage and continues to develop throughout the years, the early vision characteristics have a huge influence over shaping the adult vision. With enough literature background, the following work attempts to study, implement and evaluate the developmental aspects of an infant vision using a deep neural network model.
@@ -36,9 +36,9 @@ Here, emphasis is laid on studying the following characteristics of vision. Imag
 
 <br>
 <p align="center">
-<a href="https://github.com/Vishnu-Vardhan-R/CVP_Project/blob/main/imgs/transform.png">
-    <img src="https://github.com/Vishnu-Vardhan-R/CVP_Project/blob/main/imgs/transform.png"
-        alt="Image transformations" width="500" height="500">
+<a href="https://github.com/Vishnu-Vardhan-R/Computational-model-of-an-infant-vision/blob/main/imgs/transforms.png">
+    <img src="https://github.com/Vishnu-Vardhan-R/Computational-model-of-an-infant-vision/blob/main/imgs/transforms.png"
+        alt="Image transformations" width="500" height="300">
 </a>
 </p>
 <br>
@@ -302,10 +302,12 @@ The script **`eval.py`** loads trained models, extracts activations from selecte
 
 ## Main notebook
 
-The training and evaluation can also be executed with the python notebook `Computational_model_infant_vision.ipynb`. The dependent files **`CVPDatset.py`**, **`DataLoader.py`**, **`CSFTransform.py`** and **`model.py`** are to be uplaoded in the local runtime of google colab. Also provide the `ROOT_DIR` of the dataset and `SAVE_PATH` to save all the figures and trained models.
+The training and evaluation can also be executed with the python notebook **`Computational_model_infant_vision.ipynb`**. The dependent files **`CVPDatset.py`**, **`DataLoader.py`**, **`CSFTransform.py`** and **`model.py`** are to be uplaoded in the local runtime of google colab. Also provide the `ROOT_DIR` of the dataset and `SAVE_PATH` to save all the figures and trained models.
 
 
 ## Results
+
+
 
 <br>
 <p align="center">
