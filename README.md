@@ -335,7 +335,7 @@ The drawn conculsions are inline with the results from [[1]](#1) and [[6]](#6). 
 </p>
 <br>
 
-## References
+## Citations
 
 <a id="1">[1]</a> 
 L. Vogelsang, S. Gilad-Gutnick, E. Ehrenberg, A. Yonas, S. Diamond, R. Held, P. Sinha, Potential downside of high initial visual acuity, Proc. Natl. Acad. Sci. U.S.A. 115 (44) 11333-11338, https://doi.org/10.1073/pnas.1800901115
