@@ -38,7 +38,7 @@ Here, emphasis is laid on studying the following characteristics of vision. Imag
 <p align="center">
 <a href="https://github.com/Vishnu-Vardhan-R/Computational-model-of-an-infant-vision/blob/main/imgs/transforms.png">
     <img src="https://github.com/Vishnu-Vardhan-R/Computational-model-of-an-infant-vision/blob/main/imgs/transforms.png"
-        alt="Image transformations" width="500" height="300">
+        alt="Image transformations" width="700" height="300">
 </a>
 </p>
 <br>
